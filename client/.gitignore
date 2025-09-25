@@ -1,0 +1,339 @@
+# ===================================
+# ARQUIVOS DE SEGURANÇA - NUNCA COMMITAR
+# ===================================
+
+# Variáveis de ambiente
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Chaves e certificados
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+service-account.json
+firebase-adminsdk-*.json
+google-services.json
+GoogleService-Info.plist
+
+# Credenciais AWS
+.aws/
+
+# Segredos do Kubernetes
+*-secret.yaml
+
+# ===================================
+# NODE.JS
+# ===================================
+
+# Dependências
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Cache do npm
+.npm
+
+# Cache do Yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# Lock files (escolha um)
+# package-lock.json  # Descomente se usar Yarn
+# yarn.lock          # Descomente se usar npm
+
+# ===================================
+# LOGS E DEBUGGING
+# ===================================
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Relatórios de crash
+*.crashlog
+
+# ===================================
+# TESTES E COVERAGE
+# ===================================
+
+# Cobertura de testes
+coverage/
+*.lcov
+.nyc_output
+
+# Resultados de testes
+test-results/
+junit.xml
+
+# ===================================
+# BUILD E DISTRIBUIÇÃO
+# ===================================
+
+# Diretórios de build
+build/
+dist/
+out/
+.next/
+.nuxt/
+.cache/
+.parcel-cache/
+.vuepress/dist/
+
+# Arquivos temporários de build
+*.tsbuildinfo
+
+# ===================================
+# EDITORES E IDEs
+# ===================================
+
+# Visual Studio Code
+.vscode/
+!.vscode/settings.json.example
+
+# WebStorm/IntelliJ
+.idea/
+*.swp
+*.swo
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*~
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ===================================
+# SISTEMA OPERACIONAL
+# ===================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===================================
+# DOCKER
+# ===================================
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+.docker/
+
+# ===================================
+# DATABASES
+# ===================================
+
+# SQLite
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# PostgreSQL
+*.dump
+
+# MongoDB
+*.bson
+
+# Redis
+dump.rdb
+
+# ===================================
+# CLOUD E DEPLOY
+# ===================================
+
+# Vercel
+.vercel
+
+# Netlify
+.netlify
+
+# Heroku
+.heroku/
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Google Cloud
+.gcloud/
+
+# ===================================
+# DEPENDÊNCIAS ESPECÍFICAS
+# ===================================
+
+# Bower
+bower_components/
+
+# JSPM
+jspm_packages/
+
+# TypeScript
+*.tsbuildinfo
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# Stylelint cache
+.stylelintcache
+
+# ===================================
+# RUNTIME DATA
+# ===================================
+
+# PID files
+*.pid
+*.seed
+*.pid.lock
+
+# Diretório de runtime
+pids/
+
+# Cobertura de instrumentação
+lib-cov/
+
+# Grunt intermediate storage
+.grunt
+
+# Bower dependency directory
+bower_components
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# ===================================
+# ARQUIVOS TEMPORÁRIOS
+# ===================================
+
+# Arquivos temporários
+*.tmp
+*.temp
+*~
+.tmp/
+tmp/
+
+# Backup files
+*.bak
+*.backup
+*.swp
+*.swo
+
+# ===================================
+# CONFIGURAÇÕES LOCAIS
+# ===================================
+
+# Configurações locais do desenvolvedor
+.local
+local.json
+config/local.json
+
+# Uploads e arquivos de usuário (se aplicável)
+uploads/
+user-uploads/
+public/uploads/
+
+# ===================================
+# MONITORAMENTO E ANALYTICS
+# ===================================
+
+# New Relic
+newrelic_agent.log
+
+# Sentry
+.sentryclirc
+
+# ===================================
+# EXEMPLO DE WHITELIST
+# ===================================
+
+# Se você quiser incluir alguns arquivos específicos:
+# !config/config.example.json
+# !.vscode/settings.json.example

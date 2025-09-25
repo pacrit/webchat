@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat com Firebase Auth e Socket.IO</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Tela de Login -->
+      <div id="loginScreen" class="login-container">
+        <h1 style="margin-bottom: 20px; color: #333">Bem-vindo ao Chat</h1>
+        <p style="margin-bottom: 30px; color: #666">
+          Faça login com sua conta Google para começar
+        </p>
+        <button id="loginBtn" class="login-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+            />
+            <path
+              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+            />
+            <path
+              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+            />
+            <path
+              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+            />
+          </svg>
+          Entrar com Google
+        </button>
+      </div>
+
+      <!-- Tela do Chat -->
+      <div id="chatScreen" class="hidden">
+        <div class="header">
+          <div class="user-info">
+            <img id="userAvatar" class="user-avatar" src="" alt="Avatar" />
+            <div>
+              <div id="userName">Usuário</div>
+              <div style="font-size: 12px; opacity: 0.8" id="connectionStatus">
+                Conectando...
+              </div>
+            </div>
+          </div>
+          <button id="logoutBtn" class="logout-btn">Sair</button>
+        </div>
+
+        <div id="onlineUsers" class="online-users">
+          Usuários online: <span id="userCount">0</span>
+        </div>
+
+        <div class="chat-container">
+          <div id="messages" class="messages">
+            <div class="loading">Carregando mensagens...</div>
+          </div>
+
+          <div class="input-container">
+            <input
+              type="text"
+              id="messageInput"
+              class="message-input"
+              placeholder="Digite sua mensagem..."
+              maxlength="500"
+            />
+            <button id="sendBtn" class="send-btn">Enviar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-app-compat.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.23.0/firebase-auth-compat.min.js"></script>
+
+    <!-- Socket.IO -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+
+    <!-- Configurações da aplicação -->
+    <script src="config.js"></script>
+
+    <script>
+      // ===== CONFIGURAÇÃO DO FIREBASE =====
+      // Usar as configurações do config.js
+      DEBUG.log('Inicializando Firebase com configuração:', window.FIREBASE_CONFIG);
+
+      // Inicializar Firebase (usando Firebase v8 compat)
+      firebase.initializeApp(window.FIREBASE_CONFIG);
+      const auth = firebase.auth();
+
+      // ===== ELEMENTOS DO DOM =====
+      const loginScreen = document.getElementById("loginScreen");
+      const chatScreen = document.getElementById("chatScreen");
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const userAvatar = document.getElementById("userAvatar");
+      const userName = document.getElementById("userName");
+      const connectionStatus = document.getElementById("connectionStatus");
+      const messagesContainer = document.getElementById("messages");
+      const messageInput = document.getElementById("messageInput");
+      const sendBtn = document.getElementById("sendBtn");
+      const userCount = document.getElementById("userCount");
+
+      // ===== VARIÁVEIS GLOBAIS =====
+      let socket = null;
+      let currentUser = null;
+      let connectionTimeout = null;
+
+      // ===== AUTENTICAÇÃO COM FIREBASE =====
+
+      // Configurar provedor do Google
+      const googleProvider = new firebase.auth.GoogleAuthProvider();
+      googleProvider.addScope("profile");
+      googleProvider.addScope("email");
+
+      // Listener para mudanças no estado de autenticação
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          currentUser = user;
+          showChatScreen();
+          
+          // Conectar apenas se o servidor estiver disponível
+          if (DEBUG.isDevMode()) {
+            DEBUG.log('Tentando conectar ao Socket.IO...');
+            connectSocket();
+          } else {
+            connectionStatus.textContent = "Modo offline";
+            connectionStatus.style.color = THEMES.default.warning;
+            showNotification("Chat funcionando em modo offline", 'warning');
+          }
+        } else {
+          currentUser = null;
+          showLoginScreen();
+          if (socket) {
+            socket.disconnect();
+          }
+        }
+      });
+
+      // Login com Google
+      loginBtn.addEventListener("click", async () => {
+        try {
+          loginBtn.textContent = "Entrando...";
+          loginBtn.disabled = true;
+
+          const result = await auth.signInWithPopup(googleProvider);
+          DEBUG.log("Login bem-sucedido:", result.user);
+          showNotification(SUCCESS_MESSAGES.LOGIN_SUCCESS, 'success');
+        } catch (error) {
+          DEBUG.error("Erro no login:", error);
+          showNotification(ERROR_MESSAGES.AUTH_FAILED, 'error');
+          loginBtn.textContent = "Entrar com Google";
+          loginBtn.disabled = false;
+        }
+      });
+
+      // Logout
+      logoutBtn.addEventListener("click", async () => {
+        try {
+          await auth.signOut();
+          DEBUG.log("Logout bem-sucedido");
+          showNotification(SUCCESS_MESSAGES.LOGOUT_SUCCESS, 'success');
+        } catch (error) {
+          DEBUG.error("Erro no logout:", error);
+          showNotification(ERROR_MESSAGES.NETWORK_ERROR, 'error');
+        }
+      });
+
+      // ===== SOCKET.IO =====
+
+      function connectSocket() {
+        // Usar a URL do servidor do config.js
+        DEBUG.log('Conectando ao servidor Socket.IO:', APP_CONFIG.SOCKET_URL);
+        
+        // Timeout para conexão
+        connectionTimeout = setTimeout(() => {
+          DEBUG.warn('Timeout na conexão Socket.IO - entrando em modo offline');
+          connectionStatus.textContent = "Modo offline";
+          connectionStatus.style.color = THEMES.default.warning;
+          showNotification("Servidor não disponível. Funcionando em modo offline.", 'warning');
+        }, 5000);
+        
+        // Obter token do Firebase Auth
+        currentUser.getIdToken().then((idToken) => {
+          DEBUG.log('Token obtido, conectando ao Socket.IO');
+          
+          socket = io(APP_CONFIG.SOCKET_URL, {
+            timeout: APP_CONFIG.CONNECTION_TIMEOUT,
+            autoConnect: true,
+            reconnection: true,
+            reconnectionAttempts: 3,
+            reconnectionDelay: 1000,
+            auth: {
+              token: idToken,
+              user: {
+                uid: currentUser.uid,
+                name: currentUser.displayName,
+                avatar: currentUser.photoURL,
+                email: currentUser.email,
+              },
+            },
+          });
+
+          // Mover os event listeners para dentro da função
+          setupSocketEvents();
+          
+        }).catch((error) => {
+          DEBUG.error('Erro ao obter token:', error);
+          DEBUG.log('Continuando em modo offline sem servidor');
+          connectionStatus.textContent = "Modo offline (sem servidor)";
+          connectionStatus.style.color = THEMES.default.warning;
+          messagesContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">Modo offline - você pode testar digitando mensagens que aparecerão apenas para você.</div>';
+          showNotification("Funcionando em modo offline", 'warning');
+        });
+
+
+      }
+
+      function setupSocketEvents() {
+        if (!socket) return;
+
+        // Eventos do Socket
+        socket.on("connect", () => {
+          clearTimeout(connectionTimeout);
+          DEBUG.log(SUCCESS_MESSAGES.CONNECTED);
+          connectionStatus.textContent = "Online";
+          connectionStatus.style.color = THEMES.default.success;
+          messagesContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">Chat conectado! Comece a conversar...</div>';
+          
+          // Mostrar notificação se habilitada
+          if (APP_CONFIG.FEATURES.enableNotifications) {
+            showNotification(SUCCESS_MESSAGES.CONNECTED, 'success');
+          }
+        });
+
+        socket.on("disconnect", () => {
+          DEBUG.warn('Desconectado do servidor');
+          connectionStatus.textContent = "Desconectado";
+          connectionStatus.style.color = THEMES.default.error;
+          
+          // Mostrar notificação se habilitada
+          if (APP_CONFIG.FEATURES.enableNotifications) {
+            showNotification(ERROR_MESSAGES.CONNECTION_FAILED, 'error');
+          }
+        });
+
+        socket.on("message", (data) => {
+          addMessage(data);
+        });
+
+        socket.on("userJoined", (data) => {
+          addSystemMessage(`${data.user.name} entrou no chat`);
+          updateUserCount(data.userCount);
+        });
+
+        socket.on("userLeft", (data) => {
+          addSystemMessage(`${data.user.name} saiu do chat`);
+          updateUserCount(data.userCount);
+        });
+
+        socket.on("userCount", (count) => {
+          updateUserCount(count);
+        });
+
+        socket.on("error", (error) => {
+          DEBUG.error("Erro do socket:", error);
+          showNotification(ERROR_MESSAGES.SERVER_ERROR, 'error');
+        });
+
+        socket.on("connect_error", (error) => {
+          DEBUG.error("Erro de conexão:", error);
+          showNotification(ERROR_MESSAGES.CONNECTION_FAILED, 'error');
+        });
+      }
+      
+      function showNotification(message, type = 'info') {
+        // Criar elemento de notificação temporária
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          padding: 10px 15px;
+          border-radius: 4px;
+          color: white;
+          font-size: 14px;
+          z-index: 1000;
+          max-width: 300px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          background-color: ${type === 'error' ? THEMES.default.error : 
+                           type === 'success' ? THEMES.default.success : 
+                           type === 'warning' ? THEMES.default.warning : 
+                           THEMES.default.primary};
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Mostrar com animação
+        setTimeout(() => notification.style.opacity = '1', 100);
+        
+        // Remover após 3 segundos
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          setTimeout(() => document.body.removeChild(notification), 300);
+        }, 3000);
+      }
+
+      // ===== INTERFACE =====
+
+      function showLoginScreen() {
+        loginScreen.classList.remove("hidden");
+        chatScreen.classList.add("hidden");
+      }
+
+      function showChatScreen() {
+        loginScreen.classList.add("hidden");
+        chatScreen.classList.remove("hidden");
+
+        // Atualizar informações do usuário
+        userName.textContent = currentUser.displayName;
+        userAvatar.src = currentUser.photoURL;
+
+        // Limpar mensagens e mostrar status inicial
+        messagesContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">Conectando ao servidor...</div>';
+
+        // Focar no input
+        messageInput.focus();
+      }
+
+      function addMessage(data) {
+        const messageEl = document.createElement("div");
+        messageEl.className = `message ${
+          data.user.uid === currentUser.uid ? "own" : ""
+        }`;
+
+        const time = new Date(data.timestamp).toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        messageEl.innerHTML = `
+                <img class="message-avatar" src="${data.user.avatar}" alt="${
+          data.user.name
+        }">
+                <div class="message-content">
+                    <div class="message-author">${data.user.name}</div>
+                    <div class="message-text">${escapeHtml(data.text)}</div>
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+
+        messagesContainer.appendChild(messageEl);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function addSystemMessage(text) {
+        const messageEl = document.createElement("div");
+        messageEl.style.cssText = `
+                text-align: center;
+                color: #999;
+                font-size: 12px;
+                margin: 10px 0;
+                padding: 5px;
+            `;
+        messageEl.textContent = text;
+        messagesContainer.appendChild(messageEl);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function updateUserCount(count) {
+        userCount.textContent = count;
+      }
+
+      function escapeHtml(text) {
+        return VALIDATORS.escapeHtml(text);
+      }
+
+      // ===== ENVIO DE MENSAGENS =====
+
+      function sendMessage() {
+        const text = messageInput.value.trim();
+        
+        // Validações básicas
+        if (!text) {
+          showNotification(ERROR_MESSAGES.MESSAGE_EMPTY, 'error');
+          return;
+        }
+        
+        if (!socket || !socket.connected) {
+          // Modo offline - simular mensagem local
+          if (DEBUG.isDevMode()) {
+            DEBUG.log('Enviando mensagem em modo offline');
+            addMessage({
+              user: {
+                uid: currentUser.uid,
+                name: currentUser.displayName,
+                avatar: currentUser.photoURL
+              },
+              text: text,
+              timestamp: Date.now()
+            });
+            messageInput.value = "";
+            messageInput.focus();
+            showNotification("Mensagem enviada (modo offline)", 'warning');
+            return;
+          } else {
+            showNotification(ERROR_MESSAGES.CONNECTION_FAILED, 'error');
+            return;
+          }
+        }
+
+        // Validar mensagem usando o config.js
+        if (!VALIDATORS.isValidMessage(text)) {
+          if (text.length > APP_CONFIG.MAX_MESSAGE_LENGTH) {
+            showNotification(ERROR_MESSAGES.MESSAGE_TOO_LONG, 'error');
+          } else {
+            showNotification(ERROR_MESSAGES.INVALID_DATA, 'error');
+          }
+          return;
+        }
+
+        // Verificar rate limiting
+        if (!RATE_LIMITER.canSendMessage()) {
+          showNotification(ERROR_MESSAGES.RATE_LIMIT_EXCEEDED, 'error');
+          return;
+        }
+
+        // Sanitizar mensagem
+        const sanitizedText = VALIDATORS.sanitizeMessage(text);
+        
+        DEBUG.log('Enviando mensagem:', sanitizedText);
+
+        socket.emit("message", {
+          text: sanitizedText,
+          timestamp: Date.now(),
+        });
+
+        // Registrar mensagem no rate limiter
+        RATE_LIMITER.recordMessage();
+
+        messageInput.value = "";
+        messageInput.focus();
+        
+        // Mostrar feedback visual se habilitado
+        if (APP_CONFIG.FEATURES.enableNotifications) {
+          showNotification(SUCCESS_MESSAGES.MESSAGE_SENT, 'success');
+        }
+      }
+
+      sendBtn.addEventListener("click", sendMessage);
+
+      messageInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      });
+
+      // Validação em tempo real do input
+      messageInput.addEventListener("input", () => {
+        const text = messageInput.value.trim();
+        const isValid = VALIDATORS.isValidMessage(text);
+        sendBtn.disabled = !isValid;
+        
+        // Feedback visual se a mensagem estiver muito longa
+        if (text.length > APP_CONFIG.MAX_MESSAGE_LENGTH) {
+          messageInput.style.borderColor = THEMES.default.error;
+          messageInput.title = ERROR_MESSAGES.MESSAGE_TOO_LONG;
+        } else {
+          messageInput.style.borderColor = '';
+          messageInput.title = '';
+        }
+      });
+
+      // ===== INICIALIZAÇÃO =====
+
+      // Configurar maxlength do input dinamicamente
+      messageInput.maxLength = APP_CONFIG.MAX_MESSAGE_LENGTH;
+
+      // Verificar se já está logado
+      const unsubscribe = auth.onAuthStateChanged(() => {
+        // Remove o listener após a primeira verificação
+        unsubscribe();
+      });
+
+      DEBUG.log("Chat inicializado com configurações:", {
+        socketUrl: APP_CONFIG.SOCKET_URL,
+        maxMessageLength: APP_CONFIG.MAX_MESSAGE_LENGTH,
+        features: APP_CONFIG.FEATURES,
+        isDevMode: DEBUG.isDevMode()
+      });
+    </script>
+  </body>
+</html>
