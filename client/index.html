@@ -7,35 +7,336 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <!-- Modal para Criar Sala -->
+    <div id="createRoomModal" class="modal-overlay hidden">
+      <div class="modal">
+        <div class="modal-header">
+          <h3>Criar Nova Sala</h3>
+          <button id="closeCreateRoomModal" class="close-btn">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-content">
+          <div class="form-group">
+            <label for="roomName">Nome da Sala</label>
+            <input
+              type="text"
+              id="roomName"
+              class="form-input"
+              placeholder="Digite o nome da sala"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="roomDescription">Descrição (opcional)</label>
+            <textarea
+              id="roomDescription"
+              class="form-input"
+              rows="3"
+              placeholder="Descreva sobre o que é esta sala"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="isPrivateRoom" />
+              <span class="checkmark"></span>
+              Sala privada (apenas com convite)
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="cancelCreateRoom" class="auth-btn secondary">
+            Cancelar
+          </button>
+          <button id="confirmCreateRoom" class="auth-btn primary">
+            Criar Sala
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="container">
       <!-- Tela de Login -->
       <div id="loginScreen" class="login-container">
-        <h1 style="margin-bottom: 20px; color: #333">Bem-vindo ao Chat</h1>
-        <p style="margin-bottom: 30px; color: #666">
-          Faça login com sua conta Google para começar
-        </p>
-        <button id="loginBtn" class="login-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            />
-            <path
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-            />
-            <path
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-            />
-            <path
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-            />
-          </svg>
-          Entrar com Google
-        </button>
+        <h1>Bem-vindo ao Chat</h1>
+        <p>Escolha como deseja acessar sua conta</p>
+
+        <!-- Abas de Login -->
+        <div class="auth-tabs">
+          <button class="tab-btn active" data-tab="google">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+              />
+            </svg>
+            Google
+          </button>
+          <button class="tab-btn" data-tab="email">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+              />
+              <polyline points="22,6 12,13 2,6" />
+            </svg>
+            Email
+          </button>
+        </div>
+
+        <!-- Conteúdo das Abas -->
+        <div class="auth-content">
+          <!-- Aba Google -->
+          <div id="googleTab" class="tab-content active">
+            <p class="tab-description">
+              Acesse rapidamente com sua conta Google
+            </p>
+            <button id="loginBtn" class="login-btn">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                />
+                <path
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                />
+              </svg>
+              Entrar com Google
+            </button>
+          </div>
+
+          <!-- Aba Email -->
+          <div id="emailTab" class="tab-content">
+            <p class="tab-description">Entre com seu email e senha</p>
+
+            <form id="authForm" class="auth-form">
+              <div class="form-group">
+                <input
+                  type="email"
+                  id="emailInput"
+                  class="form-input"
+                  placeholder="Seu email"
+                  required
+                />
+                <svg
+                  class="input-icon"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                  />
+                  <polyline points="22,6 12,13 2,6" />
+                </svg>
+              </div>
+
+              <div class="form-group">
+                <input
+                  type="password"
+                  id="passwordInput"
+                  class="form-input"
+                  placeholder="Sua senha"
+                  required
+                />
+                <svg
+                  class="input-icon"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <circle cx="12" cy="16" r="1" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+
+              <div class="auth-buttons">
+                <button
+                  type="submit"
+                  id="loginEmailBtn"
+                  class="auth-btn primary"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                  </svg>
+                  Entrar
+                </button>
+                <button type="button" id="signupBtn" class="auth-btn secondary">
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path
+                      d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
+                    />
+                  </svg>
+                  Criar Conta
+                </button>
+              </div>
+
+              <div class="auth-toggle">
+                <span id="authToggleText">Não tem uma conta? </span>
+                <button type="button" id="toggleAuthMode" class="link-btn">
+                  Criar conta
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tela de Seleção de Salas -->
+      <div id="roomsScreen" class="hidden">
+        <div class="rooms-header">
+          <div class="user-info">
+            <img id="roomsUserAvatar" class="user-avatar" src="" alt="Avatar" />
+            <div>
+              <div id="roomsUserName">Usuário</div>
+              <div class="user-status">Selecione uma sala para conversar</div>
+            </div>
+          </div>
+          <button id="roomsLogoutBtn" class="logout-btn">Sair</button>
+        </div>
+
+        <div class="rooms-container">
+          <div class="rooms-section">
+            <div class="section-header">
+              <h3>Salas Públicas</h3>
+              <button id="createRoomBtn" class="create-room-btn">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Nova Sala
+              </button>
+            </div>
+
+            <div id="roomsList" class="rooms-list">
+              <div class="loading">Carregando salas...</div>
+            </div>
+          </div>
+
+          <div class="rooms-section">
+            <div class="section-header">
+              <h3>Entrar em Sala Privada</h3>
+            </div>
+
+            <div class="join-private-room">
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="privateRoomCode"
+                  class="form-input"
+                  placeholder="Código da sala privada"
+                />
+                <svg
+                  class="input-icon"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <circle cx="12" cy="16" r="1" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+              <button id="joinPrivateRoomBtn" class="auth-btn primary">
+                Entrar na Sala
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Tela do Chat -->
       <div id="chatScreen" class="hidden">
         <div class="header">
+          <div class="chat-room-info">
+            <button id="backToRoomsBtn" class="back-btn">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <polyline points="15,18 9,12 15,6"></polyline>
+              </svg>
+            </button>
+            <div class="room-details">
+              <div id="currentRoomName">Sala Geral</div>
+              <div id="currentRoomUsers">0 usuários online</div>
+            </div>
+          </div>
+
           <div class="user-info">
             <img id="userAvatar" class="user-avatar" src="" alt="Avatar" />
             <div>
@@ -83,416 +384,1338 @@
 
     <script>
       // ===== CONFIGURAÇÃO DO FIREBASE =====
+      console.log("Verificando se config.js foi carregado...");
+      console.log("window.FIREBASE_CONFIG:", window.FIREBASE_CONFIG);
+      console.log("window.DEBUG:", window.DEBUG);
+
       // Usar as configurações do config.js
-      DEBUG.log('Inicializando Firebase com configuração:', window.FIREBASE_CONFIG);
+      if (typeof DEBUG !== "undefined") {
+        DEBUG.log(
+          "Inicializando Firebase com configuração:",
+          window.FIREBASE_CONFIG
+        );
+      } else {
+        console.log("DEBUG não disponível, usando console.log");
+      }
 
-      // Inicializar Firebase (usando Firebase v8 compat)
-      firebase.initializeApp(window.FIREBASE_CONFIG);
-      const auth = firebase.auth();
+      if (!window.FIREBASE_CONFIG) {
+        console.error(
+          "ERRO: Configurações do Firebase não foram carregadas do config.js!"
+        );
+        alert("Erro: Não foi possível carregar as configurações do Firebase");
+      } else {
+        console.log("✅ Configurações do Firebase carregadas com sucesso!");
+      }
 
-      // ===== ELEMENTOS DO DOM =====
-      const loginScreen = document.getElementById("loginScreen");
-      const chatScreen = document.getElementById("chatScreen");
-      const loginBtn = document.getElementById("loginBtn");
-      const logoutBtn = document.getElementById("logoutBtn");
-      const userAvatar = document.getElementById("userAvatar");
-      const userName = document.getElementById("userName");
-      const connectionStatus = document.getElementById("connectionStatus");
-      const messagesContainer = document.getElementById("messages");
-      const messageInput = document.getElementById("messageInput");
-      const sendBtn = document.getElementById("sendBtn");
-      const userCount = document.getElementById("userCount");
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("✅ DOM carregado, iniciando aplicação...");
 
-      // ===== VARIÁVEIS GLOBAIS =====
-      let socket = null;
-      let currentUser = null;
-      let connectionTimeout = null;
+        // Verificar se Firebase está disponível
+        if (typeof firebase === "undefined") {
+          console.error("❌ Firebase não está disponível!");
+          return;
+        }
 
-      // ===== AUTENTICAÇÃO COM FIREBASE =====
+        // Verificar se as configurações estão disponíveis
+        if (typeof window.FIREBASE_CONFIG === "undefined") {
+          console.error("❌ Configurações do Firebase não encontradas!");
+          return;
+        }
 
-      // Configurar provedor do Google
-      const googleProvider = new firebase.auth.GoogleAuthProvider();
-      googleProvider.addScope("profile");
-      googleProvider.addScope("email");
+        // Inicializar Firebase (usando Firebase v8 compat)
+        try {
+          firebase.initializeApp(window.FIREBASE_CONFIG);
+          console.log("✅ Firebase inicializado com sucesso!");
+        } catch (error) {
+          console.error("❌ Erro ao inicializar Firebase:", error);
+          return;
+        }
 
-      // Listener para mudanças no estado de autenticação
-      auth.onAuthStateChanged((user) => {
-        if (user) {
-          currentUser = user;
-          showChatScreen();
-          
-          // Conectar apenas se o servidor estiver disponível
-          if (DEBUG.isDevMode()) {
-            DEBUG.log('Tentando conectar ao Socket.IO...');
-            connectSocket();
+        // ===== CONFIGURAÇÃO DA AUTENTICAÇÃO FIREBASE =====
+        const auth = firebase.auth();
+        const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+        // ===== MONITORAMENTO DO ESTADO DE AUTENTICAÇÃO =====
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            console.log('👤 Usuário logado:', user);
+            currentUser = user;
+            
+            // IMPORTANTE: Conectar ao socket COM os dados do usuário
+            connectSocket(user);
+            
+            // Navegar para tela de salas
+            showRoomsScreen();
+            
+            // Carregar salas disponíveis
+            loadAvailableRooms();
+            
           } else {
-            connectionStatus.textContent = "Modo offline";
-            connectionStatus.style.color = THEMES.default.warning;
-            showNotification("Chat funcionando em modo offline", 'warning');
+            console.log('❌ Usuário deslogado');
+            currentUser = null;
+            
+            // Desconectar socket
+            if (socket) {
+              socket.disconnect();
+              socket = null;
+            }
+            
+            // Voltar para tela de login
+            showLoginScreen();
           }
+        });
+
+        // ===== ELEMENTOS DO DOM =====
+        console.log("Buscando elementos DOM...");
+
+        const loginScreen = document.getElementById("loginScreen");
+        const chatScreen = document.getElementById("chatScreen");
+        const loginBtn = document.getElementById("loginBtn");
+        const logoutBtn = document.getElementById("logoutBtn");
+        const userAvatar = document.getElementById("userAvatar");
+        const userName = document.getElementById("userName");
+        const connectionStatus = document.getElementById("connectionStatus");
+        const messagesContainer = document.getElementById("messages");
+        const messageInput = document.getElementById("messageInput");
+        const sendBtn = document.getElementById("sendBtn");
+        const userCount = document.getElementById("userCount");
+
+        // Novos elementos para autenticação
+        const tabBtns = document.querySelectorAll(".tab-btn");
+        const googleTab = document.getElementById("googleTab");
+        const emailTab = document.getElementById("emailTab");
+
+        // Elementos da tela de salas
+        const roomsLogoutBtn = document.getElementById("roomsLogoutBtn");
+        const createRoomBtn = document.getElementById("createRoomBtn");
+        const joinPrivateRoomBtn =
+          document.getElementById("joinPrivateRoomBtn");
+        const backToRoomsBtn = document.getElementById("backToRoomsBtn");
+
+        // Elementos do modal
+        const createRoomModal = document.getElementById("createRoomModal");
+        const closeCreateRoomModalBtn = document.getElementById(
+          "closeCreateRoomModal"
+        );
+        const cancelCreateRoomBtn = document.getElementById("cancelCreateRoom");
+        const confirmCreateRoomBtn =
+          document.getElementById("confirmCreateRoom");
+        const authForm = document.getElementById("authForm");
+        const emailInput = document.getElementById("emailInput");
+        const passwordInput = document.getElementById("passwordInput");
+        const loginEmailBtn = document.getElementById("loginEmailBtn");
+        const signupBtn = document.getElementById("signupBtn");
+        const toggleAuthMode = document.getElementById("toggleAuthMode");
+        const authToggleText = document.getElementById("authToggleText");
+
+        // Verificar se elementos críticos foram encontrados
+        console.log("=== VERIFICAÇÃO DE ELEMENTOS ===");
+        console.log("loginBtn:", loginBtn);
+        console.log("loginScreen:", loginScreen);
+        console.log("chatScreen:", chatScreen);
+        console.log("tabBtns length:", tabBtns ? tabBtns.length : 0);
+
+        if (!loginBtn) {
+          console.error("❌ Elemento loginBtn não encontrado!");
         } else {
-          currentUser = null;
-          showLoginScreen();
+          console.log("✅ Elemento loginBtn encontrado:", loginBtn);
+        }
+
+        if (!loginScreen) {
+          console.error("❌ Elemento loginScreen não encontrado!");
+        } else {
+          console.log("✅ Elemento loginScreen encontrado");
+        }
+
+        console.log("✅ Novos elementos de autenticação carregados");
+
+        // Verificar elementos das tabs
+        console.log("Verificando elementos das tabs...");
+        console.log("tabBtns encontrados:", tabBtns.length);
+        console.log("googleTab:", document.getElementById("googleTab"));
+        console.log("emailTab:", document.getElementById("emailTab"));
+
+        tabBtns.forEach((btn, index) => {
+          console.log(`Tab ${index}:`, btn.getAttribute("data-tab"), btn);
+        });
+
+        // Debug dos elementos das abas
+        console.log("Tab buttons:", tabBtns);
+        console.log("Google tab:", googleTab);
+        console.log("Email tab:", emailTab);
+        console.log("Auth form:", authForm);
+
+        // ===== VARIÁVEIS GLOBAIS =====
+        let socket = null;
+        let currentUser = null;
+        let connectionTimeout = null;
+        let isSignupMode = false;
+        let currentRoom = null;
+        let availableRooms = [];
+
+        // ===== AUTENTICAÇÃO COM FIREBASE =====
+
+        console.log("Configurando provedor do Google...");
+
+        googleProvider.addScope("profile");
+        googleProvider.addScope("email");
+
+        console.log("✅ Provedor do Google configurado:", googleProvider);
+
+        // ===== SISTEMA DE ABAS =====
+
+        // Função para trocar abas
+        function switchTab(tabName) {
+          console.log(`Tentando trocar para aba: ${tabName}`);
+
+          // Remover classe active de todas as abas
+          tabBtns.forEach((btn) => {
+            btn.classList.remove("active");
+            console.log(`Removido active de: ${btn.getAttribute("data-tab")}`);
+          });
+
+          document.querySelectorAll(".tab-content").forEach((content) => {
+            content.classList.remove("active");
+            console.log(`Removido active de conteúdo: ${content.id}`);
+          });
+
+          // Adicionar classe active na aba selecionada
+          const selectedBtn = document.querySelector(`[data-tab="${tabName}"]`);
+          const selectedContent = document.getElementById(`${tabName}Tab`);
+
+          if (selectedBtn && selectedContent) {
+            selectedBtn.classList.add("active");
+            selectedContent.classList.add("active");
+            console.log(`✅ Aba alterada para: ${tabName}`);
+          } else {
+            console.error(
+              `❌ Elementos não encontrados para a aba: ${tabName}`
+            );
+            console.log(`Botão: ${selectedBtn}, Conteúdo: ${selectedContent}`);
+          }
+        }
+
+        // Event listeners para as abas
+        console.log("=== CONFIGURANDO TABS ===");
+        console.log("tabBtns encontrados:", tabBtns);
+        console.log("tabBtns.length:", tabBtns ? tabBtns.length : 0);
+
+        if (tabBtns && tabBtns.length > 0) {
+          console.log(`✅ Configurando listeners para ${tabBtns.length} abas`);
+
+          tabBtns.forEach((btn, index) => {
+            console.log(
+              `Configurando listener para aba ${index}:`,
+              btn.getAttribute("data-tab")
+            );
+            console.log("Elemento da aba:", btn);
+
+            btn.addEventListener("click", (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const tabName = btn.getAttribute("data-tab");
+              console.log(`🔥 Clique detectado na aba: ${tabName}`);
+              switchTab(tabName);
+            });
+
+            console.log(
+              `✅ Listener adicionado à aba ${btn.getAttribute("data-tab")}`
+            );
+          });
+        } else {
+          console.error("❌ Nenhum botão de aba encontrado!");
+          console.log("Verificando elementos no DOM:");
+          console.log(
+            "Elemento .tab-btn:",
+            document.querySelectorAll(".tab-btn")
+          );
+        }
+
+        // Inicializar com a aba do Google ativa
+        console.log("Inicializando aba do Google...");
+        switchTab("google");
+
+        // Teste direto - adicionar funções ao window para debug
+        window.testTabClick = function () {
+          console.log("🔥 Teste de clique na aba!");
+          switchTab("email");
+        };
+
+        window.testLoginClick = function () {
+          console.log("🔥 Teste de clique no login!");
+          if (loginBtn) {
+            loginBtn.click();
+          }
+        };
+
+        console.log(
+          "✅ Funções de teste adicionadas ao window: testTabClick(), testLoginClick()"
+        );
+
+        // ===== AUTENTICAÇÃO COM EMAIL/SENHA =====
+
+        // Função para alternar entre login e signup
+        function switchAuthMode() {
+          isSignupMode = !isSignupMode;
+
+          if (isSignupMode) {
+            loginEmailBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Criar Conta
+          `;
+            authToggleText.textContent = "Já tem uma conta? ";
+            toggleAuthMode.textContent = "Fazer login";
+          } else {
+            loginEmailBtn.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+            </svg>
+            Entrar
+          `;
+            authToggleText.textContent = "Não tem uma conta? ";
+            toggleAuthMode.textContent = "Criar conta";
+          }
+
+          console.log(
+            `Modo alterado para: ${isSignupMode ? "Signup" : "Login"}`
+          );
+        }
+
+        // Event listener para alternar modo
+        if (toggleAuthMode && authToggleText) {
+          toggleAuthMode.addEventListener("click", function (e) {
+            e.preventDefault();
+            console.log("Toggle auth mode clicado");
+            switchAuthMode();
+          });
+          console.log("✅ Event listener do toggle configurado");
+        } else {
+          console.error("❌ Elementos do toggle não encontrados:", {
+            toggleAuthMode: toggleAuthMode,
+            authToggleText: authToggleText,
+          });
+        }
+
+        // Função para autenticação com email/senha
+        async function handleEmailAuth(email, password) {
+          try {
+            let result;
+
+            if (isSignupMode) {
+              console.log("Criando nova conta com email...");
+              result = await auth.createUserWithEmailAndPassword(
+                email,
+                password
+              );
+              console.log("Conta criada com sucesso:", result.user);
+
+              if (typeof showNotification !== "undefined") {
+                showNotification("Conta criada com sucesso!", "success");
+              }
+            } else {
+              console.log("Fazendo login com email...");
+              result = await auth.signInWithEmailAndPassword(email, password);
+              console.log("Login com email bem-sucedido:", result.user);
+
+              if (
+                typeof showNotification !== "undefined" &&
+                typeof SUCCESS_MESSAGES !== "undefined"
+              ) {
+                showNotification(SUCCESS_MESSAGES.LOGIN_SUCCESS, "success");
+              }
+            }
+
+            return result;
+          } catch (error) {
+            console.error("Erro na autenticação:", error);
+
+            let errorMessage = "Erro na autenticação";
+
+            switch (error.code) {
+              case "auth/email-already-in-use":
+                errorMessage = "Este email já está sendo usado";
+                break;
+              case "auth/weak-password":
+                errorMessage = "A senha deve ter pelo menos 6 caracteres";
+                break;
+              case "auth/user-not-found":
+                errorMessage = "Usuário não encontrado";
+                break;
+              case "auth/wrong-password":
+                errorMessage = "Senha incorreta";
+                break;
+              case "auth/invalid-email":
+                errorMessage = "Email inválido";
+                break;
+              case "auth/user-disabled":
+                errorMessage = "Esta conta foi desabilitada";
+                break;
+              default:
+                errorMessage = error.message;
+            }
+
+            if (typeof showNotification !== "undefined") {
+              showNotification(errorMessage, "error");
+            } else {
+              alert(errorMessage);
+            }
+
+            throw error;
+          }
+        }
+
+        // Event listener para o formulário de email
+        if (authForm) {
+          console.log("✅ Configurando listener do formulário de email");
+          authForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            if (!email || !password) {
+              if (typeof showNotification !== "undefined") {
+                showNotification("Preencha todos os campos", "error");
+              } else {
+                alert("Preencha todos os campos");
+              }
+              return;
+            }
+
+            // Desabilitar botão durante a autenticação
+            loginEmailBtn.disabled = true;
+            loginEmailBtn.textContent = isSignupMode
+              ? "Criando conta..."
+              : "Entrando...";
+
+            try {
+              await handleEmailAuth(email, password);
+
+              // Limpar formulário
+              emailInput.value = "";
+              passwordInput.value = "";
+            } catch (error) {
+              // Erro já tratado na função handleEmailAuth
+            } finally {
+              // Reabilitar botão
+              loginEmailBtn.disabled = false;
+              switchAuthMode(); // Reset button text
+              switchAuthMode(); // Call twice to get back to original state
+            }
+          });
+        } else {
+          console.error("❌ Formulário de email não encontrado!");
+        }
+
+        // Listener para mudanças no estado de autenticação
+        auth.onAuthStateChanged((user) => {
+          if (user) {
+            currentUser = user;
+            showRoomsScreen();
+
+            // Conectar apenas se o servidor estiver disponível
+            if (DEBUG.isDevMode()) {
+              DEBUG.log("Tentando conectar ao Socket.IO...");
+              connectSocket();
+            } else {
+              connectionStatus.textContent = "Modo offline";
+              connectionStatus.style.color = THEMES.default.warning;
+              showNotification("Chat funcionando em modo offline", "warning");
+            }
+          } else {
+            currentUser = null;
+            showLoginScreen();
+            if (socket) {
+              socket.disconnect();
+            }
+          }
+        });
+
+        // Login com Google - Verificar se o elemento existe antes de adicionar listener
+        if (loginBtn) {
+          console.log("✅ Adicionando event listener ao botão de login");
+          loginBtn.addEventListener("click", async () => {
+            console.log("🔥 Botão de login clicado!"); // Debug
+            try {
+              loginBtn.textContent = "Entrando...";
+              loginBtn.disabled = true;
+
+              console.log("Tentando fazer login com Google..."); // Debug
+              const result = await auth.signInWithPopup(googleProvider);
+              console.log("Login bem-sucedido:", result.user); // Debug
+
+              if (typeof DEBUG !== "undefined") {
+                DEBUG.log("Login bem-sucedido:", result.user);
+              }
+              if (
+                typeof showNotification !== "undefined" &&
+                typeof SUCCESS_MESSAGES !== "undefined"
+              ) {
+                showNotification(SUCCESS_MESSAGES.LOGIN_SUCCESS, "success");
+              }
+            } catch (error) {
+              console.error("Erro no login:", error); // Debug sempre ativo
+
+              if (typeof DEBUG !== "undefined") {
+                DEBUG.error("Erro no login:", error);
+              }
+              if (
+                typeof showNotification !== "undefined" &&
+                typeof ERROR_MESSAGES !== "undefined"
+              ) {
+                showNotification(ERROR_MESSAGES.AUTH_FAILED, "error");
+              } else {
+                alert("Erro no login: " + error.message);
+              }
+              loginBtn.textContent = "Entrar com Google";
+              loginBtn.disabled = false;
+            }
+          });
+        } else {
+          console.error("❌ Elemento loginBtn não encontrado!");
+        }
+
+        // Logout
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", async () => {
+            try {
+              await auth.signOut();
+              if (typeof DEBUG !== "undefined") {
+                DEBUG.log("Logout bem-sucedido");
+              }
+              if (
+                typeof showNotification !== "undefined" &&
+                typeof SUCCESS_MESSAGES !== "undefined"
+              ) {
+                showNotification(SUCCESS_MESSAGES.LOGOUT_SUCCESS, "success");
+              }
+            } catch (error) {
+              if (typeof DEBUG !== "undefined") {
+                DEBUG.error("Erro no logout:", error);
+              }
+              if (
+                typeof showNotification !== "undefined" &&
+                typeof ERROR_MESSAGES !== "undefined"
+              ) {
+                showNotification(ERROR_MESSAGES.NETWORK_ERROR, "error");
+              }
+            }
+          });
+        }
+
+        // Logout da tela de salas
+        if (roomsLogoutBtn) {
+          roomsLogoutBtn.addEventListener("click", async () => {
+            try {
+              await auth.signOut();
+              if (typeof DEBUG !== "undefined") {
+                DEBUG.log("Logout bem-sucedido");
+              }
+              if (
+                typeof showNotification !== "undefined" &&
+                typeof SUCCESS_MESSAGES !== "undefined"
+              ) {
+                showNotification(SUCCESS_MESSAGES.LOGOUT_SUCCESS, "success");
+              }
+            } catch (error) {
+              if (typeof DEBUG !== "undefined") {
+                DEBUG.error("Erro no logout:", error);
+              }
+              if (
+                typeof showNotification !== "undefined" &&
+                typeof ERROR_MESSAGES !== "undefined"
+              ) {
+                showNotification(ERROR_MESSAGES.NETWORK_ERROR, "error");
+              }
+            }
+          });
+        }
+
+        // Botões da tela de salas
+        createRoomBtn.addEventListener("click", createRoom);
+        joinPrivateRoomBtn.addEventListener("click", joinPrivateRoom);
+        backToRoomsBtn.addEventListener("click", showRoomsScreen);
+
+        // Modal de criar sala
+        if (closeCreateRoomModalBtn)
+          closeCreateRoomModalBtn.addEventListener("click", () =>
+            closeCreateRoomModalFn()
+          );
+        if (cancelCreateRoomBtn)
+          cancelCreateRoomBtn.addEventListener("click", () =>
+            closeCreateRoomModalFn()
+          );
+        if (confirmCreateRoomBtn)
+          confirmCreateRoomBtn.addEventListener("click", () =>
+            confirmCreateRoomFn()
+          );
+
+        // Fechar modal clicando no overlay
+        if (createRoomModal) {
+          createRoomModal.addEventListener("click", (e) => {
+            if (e.target === createRoomModal) {
+              closeCreateRoomModalFn();
+            }
+          });
+        }
+
+        // Enter para confirmar criação de sala
+        const roomNameInput = document.getElementById("roomName");
+        if (roomNameInput) {
+          roomNameInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+              confirmCreateRoomFn();
+            }
+          });
+        }
+
+        // Enter para entrar em sala privada
+        document
+          .getElementById("privateRoomCode")
+          .addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+              joinPrivateRoom();
+            }
+          });
+
+        // ===== SOCKET.IO =====
+
+        // ===== FUNÇÃO PARA CONECTAR AO SOCKET COM DADOS DO USUÁRIO =====
+        function connectSocket(user) {
           if (socket) {
             socket.disconnect();
           }
-        }
-      });
 
-      // Login com Google
-      loginBtn.addEventListener("click", async () => {
-        try {
-          loginBtn.textContent = "Entrando...";
-          loginBtn.disabled = true;
+          console.log('🔌 Conectando ao socket com usuário:', user);
 
-          const result = await auth.signInWithPopup(googleProvider);
-          DEBUG.log("Login bem-sucedido:", result.user);
-          showNotification(SUCCESS_MESSAGES.LOGIN_SUCCESS, 'success');
-        } catch (error) {
-          DEBUG.error("Erro no login:", error);
-          showNotification(ERROR_MESSAGES.AUTH_FAILED, 'error');
-          loginBtn.textContent = "Entrar com Google";
-          loginBtn.disabled = false;
-        }
-      });
-
-      // Logout
-      logoutBtn.addEventListener("click", async () => {
-        try {
-          await auth.signOut();
-          DEBUG.log("Logout bem-sucedido");
-          showNotification(SUCCESS_MESSAGES.LOGOUT_SUCCESS, 'success');
-        } catch (error) {
-          DEBUG.error("Erro no logout:", error);
-          showNotification(ERROR_MESSAGES.NETWORK_ERROR, 'error');
-        }
-      });
-
-      // ===== SOCKET.IO =====
-
-      function connectSocket() {
-        // Usar a URL do servidor do config.js
-        DEBUG.log('Conectando ao servidor Socket.IO:', APP_CONFIG.SOCKET_URL);
-        
-        // Timeout para conexão
-        connectionTimeout = setTimeout(() => {
-          DEBUG.warn('Timeout na conexão Socket.IO - entrando em modo offline');
-          connectionStatus.textContent = "Modo offline";
-          connectionStatus.style.color = THEMES.default.warning;
-          showNotification("Servidor não disponível. Funcionando em modo offline.", 'warning');
-        }, 5000);
-        
-        // Obter token do Firebase Auth
-        currentUser.getIdToken().then((idToken) => {
-          DEBUG.log('Token obtido, conectando ao Socket.IO');
-          
-          socket = io(APP_CONFIG.SOCKET_URL, {
-            timeout: APP_CONFIG.CONNECTION_TIMEOUT,
-            autoConnect: true,
-            reconnection: true,
-            reconnectionAttempts: 3,
-            reconnectionDelay: 1000,
+          socket = io(appConfig.SOCKET_URL, {
             auth: {
-              token: idToken,
-              user: {
-                uid: currentUser.uid,
-                name: currentUser.displayName,
-                avatar: currentUser.photoURL,
-                email: currentUser.email,
-              },
+              token: user.accessToken || 'temp_token_' + Date.now()
             },
+            query: {
+              // Dados do usuário para o servidor
+              uid: user.uid,
+              name: user.displayName || user.email || 'Usuário',
+              email: user.email,
+              avatar: user.photoURL || null
+            },
+            transports: ['websocket', 'polling'],
+            timeout: appConfig.CONNECTION_TIMEOUT,
+            forceNew: true
           });
 
-          // Mover os event listeners para dentro da função
-          setupSocketEvents();
-          
-        }).catch((error) => {
-          DEBUG.error('Erro ao obter token:', error);
-          DEBUG.log('Continuando em modo offline sem servidor');
-          connectionStatus.textContent = "Modo offline (sem servidor)";
-          connectionStatus.style.color = THEMES.default.warning;
-          messagesContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">Modo offline - você pode testar digitando mensagens que aparecerão apenas para você.</div>';
-          showNotification("Funcionando em modo offline", 'warning');
-        });
+          // Eventos de conexão
+          socket.on('connect', () => {
+            console.log('✅ Conectado ao servidor Socket.IO');
+            console.log('🔧 Socket ID:', socket.id);
+            
+            // Limpar timeout de conexão
+            if (connectionTimeout) {
+              clearTimeout(connectionTimeout);
+            }
+            
+            // Atualizar status
+            if (connectionStatus) {
+              connectionStatus.textContent = "Online";
+              connectionStatus.style.color = THEMES.default.success;
+            }
+            
+            // Adicionar listeners dos eventos de sala aqui
+            setupRoomEventListeners();
+            
+            // Solicitar lista de salas
+            socket.emit('getRooms');
+            
+            if (appConfig.FEATURES.enableNotifications) {
+              showNotification(SUCCESS_MESSAGES.CONNECTED, 'success');
+            }
+          });
 
+          socket.on('disconnect', () => {
+            console.log('❌ Desconectado do servidor');
+            if (connectionStatus) {
+              connectionStatus.textContent = "Desconectado";
+              connectionStatus.style.color = THEMES.default.error;
+            }
+          });
 
-      }
+          socket.on('connect_error', (error) => {
+            console.error('❌ Erro de conexão:', error);
+            if (connectionStatus) {
+              connectionStatus.textContent = "Erro de conexão";
+              connectionStatus.style.color = THEMES.default.error;
+            }
+            
+            // Entrar em modo offline após erro
+            setTimeout(() => {
+              if (connectionStatus) {
+                connectionStatus.textContent = "Modo offline";
+                connectionStatus.style.color = THEMES.default.warning;
+              }
+              showNotification("Servidor não disponível. Funcionando em modo offline.", 'warning');
+            }, 2000);
+          });
 
-      function setupSocketEvents() {
-        if (!socket) return;
+          return socket;
+        }
 
-        // Eventos do Socket
-        socket.on("connect", () => {
-          clearTimeout(connectionTimeout);
-          DEBUG.log(SUCCESS_MESSAGES.CONNECTED);
-          connectionStatus.textContent = "Online";
-          connectionStatus.style.color = THEMES.default.success;
-          messagesContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">Chat conectado! Comece a conversar...</div>';
-          
-          // Mostrar notificação se habilitada
-          if (APP_CONFIG.FEATURES.enableNotifications) {
-            showNotification(SUCCESS_MESSAGES.CONNECTED, 'success');
-          }
-        });
+        // ===== FUNÇÃO PARA CONFIGURAR OS LISTENERS DOS EVENTOS DE SALA =====
+        function setupRoomEventListeners() {
+          if (!socket) return;
 
-        socket.on("disconnect", () => {
-          DEBUG.warn('Desconectado do servidor');
-          connectionStatus.textContent = "Desconectado";
-          connectionStatus.style.color = THEMES.default.error;
-          
-          // Mostrar notificação se habilitada
-          if (APP_CONFIG.FEATURES.enableNotifications) {
-            showNotification(ERROR_MESSAGES.CONNECTION_FAILED, 'error');
-          }
-        });
+          // Listener para quando a sala é criada com sucesso
+          socket.on('roomCreated', (data) => {
+            console.log('✅ Sala criada com sucesso:', data);
+            
+            // Reabilitar botão
+            const confirmBtn = document.getElementById('confirmCreateRoom');
+            if (confirmBtn) {
+              confirmBtn.disabled = false;
+              confirmBtn.textContent = 'Criar Sala';
+            }
+            
+            // Mostrar notificação de sucesso
+            showNotification(`Sala "${data.roomName}" criada com sucesso!`, 'success');
+            
+            // Fechar modal
+            closeCreateRoomModalFn();
+            
+            // Atualizar lista de salas
+            refreshRoomList();
+          });
 
-        socket.on("message", (data) => {
-          addMessage(data);
-        });
+          // Listener para erros relacionados a salas
+          socket.on('roomError', (error) => {
+            console.error('❌ Erro de sala:', error);
+            
+            // Reabilitar botão
+            const confirmBtn = document.getElementById('confirmCreateRoom');
+            if (confirmBtn) {
+              confirmBtn.disabled = false;
+              confirmBtn.textContent = 'Criar Sala';
+            }
+            
+            // Mostrar erro para o usuário
+            showNotification(error.message || 'Erro ao criar sala', 'error');
+          });
 
-        socket.on("userJoined", (data) => {
-          addSystemMessage(`${data.user.name} entrou no chat`);
-          updateUserCount(data.userCount);
-        });
-
-        socket.on("userLeft", (data) => {
-          addSystemMessage(`${data.user.name} saiu do chat`);
-          updateUserCount(data.userCount);
-        });
-
-        socket.on("userCount", (count) => {
-          updateUserCount(count);
-        });
-
-        socket.on("error", (error) => {
-          DEBUG.error("Erro do socket:", error);
-          showNotification(ERROR_MESSAGES.SERVER_ERROR, 'error');
-        });
-
-        socket.on("connect_error", (error) => {
-          DEBUG.error("Erro de conexão:", error);
-          showNotification(ERROR_MESSAGES.CONNECTION_FAILED, 'error');
-        });
-      }
-      
-      function showNotification(message, type = 'info') {
-        // Criar elemento de notificação temporária
-        const notification = document.createElement('div');
-        notification.textContent = message;
-        notification.style.cssText = `
-          position: fixed;
-          top: 20px;
-          right: 20px;
-          padding: 10px 15px;
-          border-radius: 4px;
-          color: white;
-          font-size: 14px;
-          z-index: 1000;
-          max-width: 300px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          background-color: ${type === 'error' ? THEMES.default.error : 
-                           type === 'success' ? THEMES.default.success : 
-                           type === 'warning' ? THEMES.default.warning : 
-                           THEMES.default.primary};
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Mostrar com animação
-        setTimeout(() => notification.style.opacity = '1', 100);
-        
-        // Remover após 3 segundos
-        setTimeout(() => {
-          notification.style.opacity = '0';
-          setTimeout(() => document.body.removeChild(notification), 300);
-        }, 3000);
-      }
-
-      // ===== INTERFACE =====
-
-      function showLoginScreen() {
-        loginScreen.classList.remove("hidden");
-        chatScreen.classList.add("hidden");
-      }
-
-      function showChatScreen() {
-        loginScreen.classList.add("hidden");
-        chatScreen.classList.remove("hidden");
-
-        // Atualizar informações do usuário
-        userName.textContent = currentUser.displayName;
-        userAvatar.src = currentUser.photoURL;
-
-        // Limpar mensagens e mostrar status inicial
-        messagesContainer.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">Conectando ao servidor...</div>';
-
-        // Focar no input
-        messageInput.focus();
-      }
-
-      function addMessage(data) {
-        const messageEl = document.createElement("div");
-        messageEl.className = `message ${
-          data.user.uid === currentUser.uid ? "own" : ""
-        }`;
-
-        const time = new Date(data.timestamp).toLocaleTimeString("pt-BR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-
-        messageEl.innerHTML = `
-                <img class="message-avatar" src="${data.user.avatar}" alt="${
-          data.user.name
-        }">
-                <div class="message-content">
-                    <div class="message-author">${data.user.name}</div>
-                    <div class="message-text">${escapeHtml(data.text)}</div>
-                    <div class="message-time">${time}</div>
+          // Outros listeners importantes
+          socket.on('roomJoined', (data) => {
+            console.log('✅ Entrou na sala:', data);
+            currentRoom = {
+              name: data.roomName,
+              users: data.userCount || 0
+            };
+            
+            showChatScreen();
+            showNotification(`Você entrou na sala "${data.roomName}"`, 'success');
+            
+            // Limpar mensagens e mostrar mensagem de boas-vindas
+            if (messagesContainer) {
+              messagesContainer.innerHTML = `
+                <div style="text-align: center; color: #81c784; padding: 20px;">
+                  <div style="font-weight: 600;">Bem-vindo à ${data.roomName}!</div>
+                  <div style="font-size: 14px; margin-top: 5px; opacity: 0.8;">Você entrou na sala com sucesso</div>
                 </div>
-            `;
+              `;
+            }
+            
+            // Solicitar usuários da sala
+            socket.emit('getRoomUsers', { roomName: data.roomName });
+          });
 
-        messagesContainer.appendChild(messageEl);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }
+          // Receber lista de salas disponíveis
+          socket.on('availableRooms', (rooms) => {
+            console.log('📋 Salas disponíveis:', rooms);
+            availableRooms = rooms;
+            renderRoomsList();
+          });
 
-      function addSystemMessage(text) {
-        const messageEl = document.createElement("div");
-        messageEl.style.cssText = `
-                text-align: center;
-                color: #999;
-                font-size: 12px;
-                margin: 10px 0;
-                padding: 5px;
-            `;
-        messageEl.textContent = text;
-        messagesContainer.appendChild(messageEl);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }
+          // Mensagem da sala
+          socket.on('roomMessage', (message) => {
+            console.log('💬 Nova mensagem na sala:', message);
+            addMessage(message);
+          });
 
-      function updateUserCount(count) {
-        userCount.textContent = count;
-      }
+          // Usuário entrou na sala
+          socket.on('userJoinedRoom', (data) => {
+            console.log('👋 Usuário entrou na sala:', data);
+            addSystemMessage(`${data.user.name} entrou na sala`);
+            
+            // Atualizar contagem de usuários se fornecida
+            if (data.userCount !== undefined) {
+              updateRoomUserCount(data.userCount);
+            }
+          });
 
-      function escapeHtml(text) {
-        return VALIDATORS.escapeHtml(text);
-      }
+          // Usuário saiu da sala
+          socket.on('userLeftRoom', (data) => {
+            console.log('👋 Usuário saiu da sala:', data);
+            addSystemMessage(`${data.user.name} saiu da sala`);
+            
+            // Atualizar contagem de usuários se fornecida
+            if (data.userCount !== undefined) {
+              updateRoomUserCount(data.userCount);
+            }
+          });
 
-      // ===== ENVIO DE MENSAGENS =====
+          // Sala deixada
+          socket.on('roomLeft', (data) => {
+            console.log('🚪 Saiu da sala:', data);
+            currentRoom = null;
+            showRoomsScreen();
+            showNotification(`Saiu da sala "${data.roomName}"`, 'info');
+          });
 
-      function sendMessage() {
-        const text = messageInput.value.trim();
-        
-        // Validações básicas
-        if (!text) {
-          showNotification(ERROR_MESSAGES.MESSAGE_EMPTY, 'error');
-          return;
+          // Lista de usuários na sala
+          socket.on('roomUsers', (users) => {
+            console.log('👥 Usuários na sala:', users);
+            updateRoomUsersList(users);
+          });
+
+          // Indicador de digitação
+          socket.on('userTyping', (data) => {
+            console.log('⌨️ Usuário digitando:', data);
+            showTypingIndicator(data);
+          });
+
+          // Mensagem privada
+          socket.on('privateMessage', (message) => {
+            console.log('📨 Mensagem privada recebida:', message);
+            addPrivateMessage(message);
+          });
         }
-        
-        if (!socket || !socket.connected) {
-          // Modo offline - simular mensagem local
-          if (DEBUG.isDevMode()) {
-            DEBUG.log('Enviando mensagem em modo offline');
-            addMessage({
-              user: {
-                uid: currentUser.uid,
-                name: currentUser.displayName,
-                avatar: currentUser.photoURL
-              },
-              text: text,
-              timestamp: Date.now()
+
+        // ===== FUNÇÃO PARA ATUALIZAR LISTA DE SALAS =====
+        function refreshRoomList() {
+          if (socket && socket.connected) {
+            socket.emit('getRooms');
+          } else {
+            loadAvailableRooms();
+          }
+        }
+
+        // ===== FUNÇÃO PARA CRIAR SALA =====
+        function createRoom() {
+          const modal = document.getElementById("createRoomModal");
+          modal.classList.remove("hidden");
+        }
+
+        // ===== FUNÇÃO PARA CONFIRMAR CRIAÇÃO DE SALA =====
+        function confirmCreateRoomFn() {
+          const roomName = document.getElementById("roomName").value.trim();
+          const roomDescription = document
+            .getElementById("roomDescription")
+            .value.trim();
+          const isPrivate = document.getElementById("isPrivateRoom").checked;
+
+          console.log("🔧 DEBUG - Dados da sala:", {
+            roomName,
+            roomDescription,
+            isPrivate,
+          });
+          console.log(
+            "🔧 DEBUG - Socket conectado:",
+            socket && socket.connected
+          );
+          console.log("🔧 DEBUG - Socket ID:", socket?.id);
+
+          if (!roomName) {
+            showNotification("Por favor, digite um nome para a sala!", "error");
+            return;
+          }
+
+          if (!roomName.match(/^[a-zA-Z0-9\s\-_]+$/)) {
+            showNotification(
+              "Nome da sala só pode conter letras, números, espaços e hífens",
+              "error"
+            );
+            return;
+          }
+
+          if (roomName.length < 3 || roomName.length > 50) {
+            showNotification(
+              "Nome da sala deve ter entre 3 e 50 caracteres",
+              "error"
+            );
+            return;
+          }
+
+          if (socket && socket.connected) {
+            const createData = {
+              roomName: roomName,
+              isPrivate: isPrivate,
+            };
+
+            if (roomDescription) {
+              createData.description = roomDescription;
+            }
+
+            console.log("🚀 Enviando createRoom:", createData);
+
+            const confirmBtn = document.getElementById("confirmCreateRoom");
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = "Criando...";
+
+            socket.emit("createRoom", createData);
+
+            setTimeout(() => {
+              confirmBtn.disabled = false;
+              confirmBtn.textContent = "Criar Sala";
+            }, 5000);
+          } else {
+            showNotification(
+              "Servidor não disponível. Conecte-se para criar salas.",
+              "warning"
+            );
+            closeCreateRoomModalFn();
+          }
+        }
+
+        // ===== FUNÇÃO PARA FECHAR O MODAL DE CRIAÇÃO DE SALA =====
+        function closeCreateRoomModalFn() {
+          const modal = document.getElementById("createRoomModal");
+          modal.classList.add("hidden");
+
+          // Limpar formulário
+          document.getElementById("roomName").value = "";
+          document.getElementById("roomDescription").value = "";
+          document.getElementById("isPrivateRoom").checked = false;
+        }
+
+        // ===== FUNÇÃO PARA ADICIONAR MENSAGEM =====
+        function addMessage(message) {
+          const messageEl = document.createElement("div");
+          messageEl.className = `message ${
+            message.user.uid === currentUser.uid ? "own" : ""
+          }`;
+
+          const time = new Date(message.timestamp).toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+          messageEl.innerHTML = `
+          <img class="message-avatar" src="${message.user.avatar}" alt="${
+            message.user.name
+          }">
+          <div class="message-content">
+            <div class="message-author">${message.user.name}</div>
+            <div class="message-text">${escapeHtml(message.text)}</div>
+            <div class="message-time">${time}</div>
+          </div>
+        `;
+
+          messagesContainer.appendChild(messageEl);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+          // Animação suave
+          messageEl.style.opacity = "0";
+          messageEl.style.transform = "translateY(20px)";
+
+          requestAnimationFrame(() => {
+            messageEl.style.transition = "all 0.3s ease";
+            messageEl.style.opacity = "1";
+            messageEl.style.transform = "translateY(0)";
+          });
+        }
+
+        // ===== FUNÇÃO PARA ADICIONAR MENSAGEM DO SISTEMA =====
+        function addSystemMessage(text) {
+          const messageEl = document.createElement("div");
+          messageEl.className = "message system";
+          messageEl.innerHTML = `
+          <div style="text-align: center; color: #999; font-style: italic; padding: 10px; font-size: 14px;">
+            ${escapeHtml(text)}
+          </div>
+        `;
+          messagesContainer.appendChild(messageEl);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // ===== FUNÇÃO PARA ESCAPAR HTML =====
+        function escapeHtml(text) {
+          const div = document.createElement("div");
+          div.textContent = text;
+          return div.innerHTML;
+        }
+
+        // Verificar se as constantes do config.js estão disponíveis, senão usar fallbacks
+        const DEBUG = window.DEBUG || {
+          log: console.log,
+          error: console.error,
+          warn: console.warn,
+          isDevMode: () => window.location.hostname === "localhost",
+        };
+
+        const THEMES = window.THEMES || {
+          default: {
+            success: "#4caf50",
+            error: "#f44336",
+            warning: "#ff9800",
+            primary: "#2196f3",
+          },
+        };
+
+        const APP_CONFIG = window.APP_CONFIG || {
+          SOCKET_URL: "http://localhost:3030",
+          MAX_MESSAGE_LENGTH: 500,
+          CONNECTION_TIMEOUT: 10000,
+          FEATURES: {
+            enableNotifications: true,
+          },
+        };
+
+        const SUCCESS_MESSAGES = window.SUCCESS_MESSAGES || {
+          CONNECTED: "Conectado ao servidor",
+          LOGIN_SUCCESS: "Login realizado com sucesso",
+          LOGOUT_SUCCESS: "Logout realizado com sucesso",
+          MESSAGE_SENT: "Mensagem enviada",
+        };
+
+        const ERROR_MESSAGES = window.ERROR_MESSAGES || {
+          CONNECTION_FAILED: "Falha na conexão",
+          AUTH_FAILED: "Falha na autenticação",
+          MESSAGE_EMPTY: "Mensagem não pode estar vazia",
+          MESSAGE_TOO_LONG: "Mensagem muito longa",
+          INVALID_DATA: "Dados inválidos",
+          RATE_LIMIT_EXCEEDED: "Muitas mensagens. Aguarde um pouco.",
+          SERVER_ERROR: "Erro do servidor",
+          NETWORK_ERROR: "Erro de rede",
+        };
+
+        const VALIDATORS = window.VALIDATORS || {
+          isValidMessage: (text) =>
+            text &&
+            text.trim().length > 0 &&
+            text.length <= APP_CONFIG.MAX_MESSAGE_LENGTH,
+          sanitizeMessage: (text) => text.trim(),
+        };
+
+        const RATE_LIMITER = window.RATE_LIMITER || {
+          messages: [],
+          canSendMessage: function () {
+            const now = Date.now();
+            this.messages = this.messages.filter((time) => now - time < 60000); // 1 minuto
+            return this.messages.length < 10; // máximo 10 mensagens por minuto
+          },
+          recordMessage: function () {
+            this.messages.push(Date.now());
+          },
+        };
+
+        // ===== FUNÇÃO PARA ENTRAR EM SALA PRIVADA =====
+        function joinPrivateRoom() {
+          const roomNameOrCode = document
+            .getElementById("privateRoomCode")
+            .value.trim();
+
+          if (!roomNameOrCode) {
+            showNotification(
+              "Por favor, digite o nome da sala ou código!",
+              "error"
+            );
+            return;
+          }
+
+          if (socket && socket.connected) {
+            // Tentar entrar na sala
+            showNotification("Buscando sala...", "info");
+
+            socket.emit("joinRoom", {
+              roomName: roomNameOrCode,
+              // Removi o password: roomNameOrCode já que pode ser apenas o nome da sala
             });
-            messageInput.value = "";
-            messageInput.focus();
-            showNotification("Mensagem enviada (modo offline)", 'warning');
-            return;
           } else {
-            showNotification(ERROR_MESSAGES.CONNECTION_FAILED, 'error');
-            return;
+            showNotification(
+              "Servidor não disponível. Conecte-se para buscar salas.",
+              "warning"
+            );
+          }
+
+          document.getElementById("privateRoomCode").value = "";
+        }
+
+        function showRoomsScreen() {
+          loginScreen.classList.add("hidden");
+          roomsScreen.classList.remove("hidden");
+          chatScreen.classList.add("hidden");
+          
+          // Atualizar informações do usuário na tela de salas
+          if (currentUser) {
+            const userNameEl = document.getElementById('roomsUserName');
+            const userAvatarEl = document.getElementById('roomsUserAvatar');
+            
+            if (userNameEl) {
+              userNameEl.textContent = currentUser.displayName || currentUser.email || 'Usuário';
+            }
+            if (userAvatarEl) {
+              userAvatarEl.src = currentUser.photoURL || 'https://via.placeholder.com/40';
+              userAvatarEl.alt = currentUser.displayName || 'Avatar';
+            }
+          }
+          
+          // Carregar lista de salas
+          refreshRoomList();
+        }
+
+        // ===== FUNÇÃO PARA SAIR DA SALA ATUAL =====
+        function leaveCurrentRoom() {
+          if (currentRoom && socket && socket.connected) {
+            socket.emit('leaveRoom', { 
+              roomName: currentRoom.name || currentRoom.id 
+            });
+          } else {
+            // Modo offline
+            currentRoom = null;
+            showRoomsScreen();
           }
         }
 
-        // Validar mensagem usando o config.js
-        if (!VALIDATORS.isValidMessage(text)) {
-          if (text.length > APP_CONFIG.MAX_MESSAGE_LENGTH) {
-            showNotification(ERROR_MESSAGES.MESSAGE_TOO_LONG, 'error');
-          } else {
-            showNotification(ERROR_MESSAGES.INVALID_DATA, 'error');
+        // ===== FUNÇÕES AUXILIARES PARA SALAS =====
+
+        function addPrivateMessage(message) {
+          const messageEl = document.createElement("div");
+          messageEl.className = `message private ${
+            message.from.uid === currentUser.uid ? "own" : ""
+          }`;
+
+          const time = new Date(message.timestamp).toLocaleTimeString("pt-BR", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+
+          const fromUser =
+            message.from.uid === currentUser.uid ? message.to : message.from;
+
+          messageEl.innerHTML = `
+          <img class="message-avatar" src="${fromUser.avatar}" alt="${
+            fromUser.name
+          }">
+          <div class="message-content">
+            <div class="message-author">💬 ${fromUser.name} (privada)</div>
+            <div class="message-text">${escapeHtml(message.text)}</div>
+            <div class="message-time">${time}</div>
+          </div>
+        `;
+
+          messagesContainer.appendChild(messageEl);
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+          // Mostrar notificação para mensagem privada
+          if (message.from.uid !== currentUser.uid) {
+            showNotification(`Mensagem privada de ${fromUser.name}`, "info");
           }
-          return;
         }
 
-        // Verificar rate limiting
-        if (!RATE_LIMITER.canSendMessage()) {
-          showNotification(ERROR_MESSAGES.RATE_LIMIT_EXCEEDED, 'error');
-          return;
+        function updateRoomUserCount(count) {
+          if (currentRoom) {
+            currentRoom.users = count;
+            document.getElementById(
+              "currentRoomUsers"
+            ).textContent = `${count} usuários online`;
+          }
         }
 
-        // Sanitizar mensagem
-        const sanitizedText = VALIDATORS.sanitizeMessage(text);
-        
-        DEBUG.log('Enviando mensagem:', sanitizedText);
+        function updateRoomUsersList(users) {
+          // Você pode implementar uma lista de usuários mais detalhada aqui
+          updateRoomUserCount(users.length);
+          DEBUG.log("Usuários na sala atual:", users);
+        }
 
-        socket.emit("message", {
-          text: sanitizedText,
-          timestamp: Date.now(),
+        function showTypingIndicator(data) {
+          if (data.user.uid === currentUser.uid) return; // Não mostrar para o próprio usuário
+
+          const typingId = `typing-${data.user.uid}`;
+          let typingEl = document.getElementById(typingId);
+
+          if (data.isTyping) {
+            if (!typingEl) {
+              typingEl = document.createElement("div");
+              typingEl.id = typingId;
+              typingEl.className = "typing-indicator";
+              typingEl.innerHTML = `
+              <div style="color: #999; font-style: italic; font-size: 12px; padding: 5px 20px;">
+                ${data.user.name} está digitando...
+              </div>
+            `;
+              messagesContainer.appendChild(typingEl);
+              messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+          } else {
+            if (typingEl) {
+              typingEl.remove();
+            }
+          }
+        }
+
+        // ===== INDICADOR DE DIGITAÇÃO =====
+        let typingTimeout = null;
+        let isTyping = false;
+
+        function handleTyping() {
+          if (!socket || !socket.connected || !currentRoom) return;
+
+          if (!isTyping) {
+            isTyping = true;
+            socket.emit("typing", {
+              roomName: currentRoom.name || currentRoom.id,
+              isTyping: true,
+            });
+          }
+
+          clearTimeout(typingTimeout);
+          typingTimeout = setTimeout(() => {
+            isTyping = false;
+            socket.emit("typing", {
+              roomName: currentRoom.name || currentRoom.id,
+              isTyping: false,
+            });
+          }, 1000);
+        }
+
+        // ===== ENVIO DE MENSAGENS =====
+
+        function sendMessage() {
+          const text = messageInput.value.trim();
+
+          // Validações básicas
+          if (!text) {
+            showNotification(ERROR_MESSAGES.MESSAGE_EMPTY, "error");
+            return;
+          }
+
+          if (!socket || !socket.connected) {
+            // Modo offline - simular mensagem local
+            if (DEBUG.isDevMode()) {
+              DEBUG.log("Enviando mensagem em modo offline");
+              addMessage({
+                user: {
+                  uid: currentUser.uid,
+                  name: currentUser.displayName,
+                  avatar: currentUser.photoURL,
+                },
+                text: text,
+                timestamp: Date.now(),
+              });
+              messageInput.value = "";
+              messageInput.focus();
+              showNotification("Mensagem enviada (modo offline)", "warning");
+              return;
+            } else {
+              showNotification(ERROR_MESSAGES.CONNECTION_FAILED, "error");
+              return;
+            }
+          }
+
+          // Validar mensagem usando o config.js
+          if (!VALIDATORS.isValidMessage(text)) {
+            if (text.length > APP_CONFIG.MAX_MESSAGE_LENGTH) {
+              showNotification(ERROR_MESSAGES.MESSAGE_TOO_LONG, "error");
+            } else {
+              showNotification(ERROR_MESSAGES.INVALID_DATA, "error");
+            }
+            return;
+          }
+
+          // Verificar rate limiting
+          if (!RATE_LIMITER.canSendMessage()) {
+            showNotification(ERROR_MESSAGES.RATE_LIMIT_EXCEEDED, "error");
+            return;
+          }
+
+          // Sanitizar mensagem
+          const sanitizedText = VALIDATORS.sanitizeMessage(text);
+
+          DEBUG.log("Enviando mensagem para a sala:", sanitizedText);
+
+          // Enviar mensagem para a sala atual
+          if (currentRoom) {
+            socket.emit("roomMessage", {
+              roomName: currentRoom.name || currentRoom.id,
+              text: sanitizedText,
+              timestamp: Date.now(),
+            });
+          } else {
+            // Fallback para mensagem global se não estiver em sala
+            socket.emit("message", {
+              text: sanitizedText,
+              timestamp: Date.now(),
+            });
+          }
+
+          // Registrar mensagem no rate limiter
+          RATE_LIMITER.recordMessage();
+
+          // Parar indicador de digitação
+          if (isTyping) {
+            isTyping = false;
+            socket.emit("typing", {
+              roomName: currentRoom.name || currentRoom.id,
+              isTyping: false,
+            });
+          }
+
+          messageInput.value = "";
+          messageInput.focus();
+
+          // Mostrar feedback visual se habilitado
+          if (APP_CONFIG.FEATURES.enableNotifications) {
+            showNotification(SUCCESS_MESSAGES.MESSAGE_SENT, "success");
+          }
+        }
+
+        sendBtn.addEventListener("click", sendMessage);
+
+        messageInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            sendMessage();
+          }
         });
 
-        // Registrar mensagem no rate limiter
-        RATE_LIMITER.recordMessage();
+        // Validação em tempo real do input e indicador de digitação
+        messageInput.addEventListener("input", () => {
+          const text = messageInput.value.trim();
+          const isValid = VALIDATORS.isValidMessage(text);
+          sendBtn.disabled = !isValid;
 
-        messageInput.value = "";
-        messageInput.focus();
-        
-        // Mostrar feedback visual se habilitado
-        if (APP_CONFIG.FEATURES.enableNotifications) {
-          showNotification(SUCCESS_MESSAGES.MESSAGE_SENT, 'success');
-        }
-      }
+          // Indicador de digitação
+          if (text.length > 0) {
+            handleTyping();
+          }
 
-      sendBtn.addEventListener("click", sendMessage);
+          // Feedback visual se a mensagem estiver muito longa
+          if (text.length > APP_CONFIG.MAX_MESSAGE_LENGTH) {
+            messageInput.style.borderColor = THEMES.default.error;
+            messageInput.title = ERROR_MESSAGES.MESSAGE_TOO_LONG;
+          } else {
+            messageInput.style.borderColor = "";
+            messageInput.title = "";
+          }
+        });
 
-      messageInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          sendMessage();
-        }
-      });
+        // ===== INICIALIZAÇÃO =====
 
-      // Validação em tempo real do input
-      messageInput.addEventListener("input", () => {
-        const text = messageInput.value.trim();
-        const isValid = VALIDATORS.isValidMessage(text);
-        sendBtn.disabled = !isValid;
-        
-        // Feedback visual se a mensagem estiver muito longa
-        if (text.length > APP_CONFIG.MAX_MESSAGE_LENGTH) {
-          messageInput.style.borderColor = THEMES.default.error;
-          messageInput.title = ERROR_MESSAGES.MESSAGE_TOO_LONG;
-        } else {
-          messageInput.style.borderColor = '';
-          messageInput.title = '';
-        }
-      });
+        // Configurar maxlength do input dinamicamente
+        messageInput.maxLength = APP_CONFIG.MAX_MESSAGE_LENGTH;
 
-      // ===== INICIALIZAÇÃO =====
+        // Verificar se já está logado
+        const unsubscribe = auth.onAuthStateChanged(() => {
+          // Remove o listener após a primeira verificação
+          unsubscribe();
+        });
 
-      // Configurar maxlength do input dinamicamente
-      messageInput.maxLength = APP_CONFIG.MAX_MESSAGE_LENGTH;
-
-      // Verificar se já está logado
-      const unsubscribe = auth.onAuthStateChanged(() => {
-        // Remove o listener após a primeira verificação
-        unsubscribe();
-      });
-
-      DEBUG.log("Chat inicializado com configurações:", {
-        socketUrl: APP_CONFIG.SOCKET_URL,
-        maxMessageLength: APP_CONFIG.MAX_MESSAGE_LENGTH,
-        features: APP_CONFIG.FEATURES,
-        isDevMode: DEBUG.isDevMode()
-      });
+        DEBUG.log("Chat inicializado com configurações:", {
+          socketUrl: APP_CONFIG.SOCKET_URL,
+          maxMessageLength: APP_CONFIG.MAX_MESSAGE_LENGTH,
+          features: APP_CONFIG.FEATURES,
+          isDevMode: DEBUG.isDevMode(),
+        });
+      }); // Fim do DOMContentLoaded
     </script>
   </body>
 </html>

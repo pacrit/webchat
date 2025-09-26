@@ -20,7 +20,8 @@ service-account.json
 firebase-adminsdk-*.json
 google-services.json
 GoogleService-Info.plist
-
+# Firebase Admin SDK
+firebase-service-account.json
 # Credenciais AWS
 .aws/
 

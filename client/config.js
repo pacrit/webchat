@@ -2,7 +2,7 @@
 // Configurações públicas do Firebase
 const firebaseConfig = {
     // SUBSTITUA PELAS SUAS CONFIGURAÇÕES DO FIREBASE
-    apiKey: "AIzaSyDrn5H_NZoNlENflki99wC17FfMeziGxuQ",
+    apiKey: "AIzaSyDeZSW_6-c4q5fZZxhICGQ4yXlV6LI_QdE",
     authDomain: "webchat-18022.firebaseapp.com",
     projectId: "webchat-18022",
     storageBucket: "webchat-18022.firebasestorage.app",

@@ -131,6 +131,15 @@ function generateUserId() {
 }
 
 /**
+ * Gerar ID único para salas
+ */
+function generateRoomId() {
+    const timestamp = Date.now().toString();
+    const random = Math.random().toString(36).substr(2, 9);
+    return `room_${timestamp}_${random}`;
+}
+
+/**
  * Formatar data para logs
  */
 function formatLogDate(date = new Date()) {
@@ -324,6 +333,7 @@ module.exports = {
     isValidTimestamp,
     generateMessageId,
     generateUserId,
+    generateRoomId,
     formatLogDate,
     isValidEmail,
     isValidUrl,
